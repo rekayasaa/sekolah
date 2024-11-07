@@ -76,7 +76,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <p>Kamu Yakin Ingin Menghapusnya?!!</p>
+                        <p>Kamu Yakin Ingin Menghapusnya?!</p>
                     </div>
                     <div class="modal-footer bg-whitesmoke br">
                         <a href='identitas/{{ $a['id'] }}' class="btn btn-danger btn-sm">Hapus</a>
