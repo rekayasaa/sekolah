@@ -19,88 +19,99 @@
                         <div class="card-header">
                             <h4>Basic DataTables</h4>
                         </div>
+
                         <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-striped" id="table-1">
-                                    <thead>
-                                        <tr>
-                                            <th class="text-center">
-                                                #
-                                            <th>Nama</th>
-                                            <th>Nip</th>
-                                            <th>Tempat Lahir</th>
-                                            <th>Tgl Lahir</th>
-                                            <th>Jabatan</th>
-                                            <th>foto</th>
-                                            <th>Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php
-                                        $no = 1;
-                                        ?>
-                                        @foreach ($data_guru as $a)
-                                            <tr>
-                                                <td>
-                                                    {{ $no++ }}
-                                                </td>
-                                                <td class="text-left">
-                                                    {{ $a['nama'] }}
-                                                </td>
-                                                <td>
-                                                    {{ $a['nip'] }}
-                                                </td>
-                                                <td>
-                                                    {{ $a['tempat_lahir'] }}
-                                                </td>
-                                                <td>
-                                                    {{ $a['tgl_lahir'] }}
-                                                </td>
-                                                <td>
-                                                    {{ $a['jabatan'] }}
-                                                </td>
-                                                <td>
-                                                    <img src="{{ asset($a['foto']) }}" alt="Foto Berita" width="100">
-                                                </td>
+                            <form action="{{ route('guru.store') }}" method="POST">
+                                @csrf
 
-                                                <td style="text-align: center;">
-                                                    <a href='guru/edit/{{ $a['id'] }}'
-                                                        class="btn btn-warning btn-sm">Edit</a>
+                                <!-- Tombol Tambah Data -->
+                                <a href="http://sekolah.test/guru/tambah"class="btn btn-primary mb-3">
+                                    <div>TAMBAH DATA</div>
+                                </a>
 
-                                                    <button class="btn btn-danger" data-toggle="modal"
-                                                        data-target="#hapusmodal">Hapus</button>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped" id="table-1">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center">
+                                                        #
+                                                    <th>Nama</th>
+                                                    <th>Nip</th>
+                                                    <th>Tempat Lahir</th>
+                                                    <th>Tgl Lahir</th>
+                                                    <th>Jabatan</th>
+                                                    <th>foto</th>
+                                                    <th>Aksi</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                $no = 1;
+                                                ?>
+                                                @foreach ($data_guru as $a)
+                                                    <tr>
+                                                        <td>
+                                                            {{ $no++ }}
+                                                        </td>
+                                                        <td class="text-left">
+                                                            {{ $a['nama'] }}
+                                                        </td>
+                                                        <td>
+                                                            {{ $a['nip'] }}
+                                                        </td>
+                                                        <td>
+                                                            {{ $a['tempat_lahir'] }}
+                                                        </td>
+                                                        <td>
+                                                            {{ $a['tgl_lahir'] }}
+                                                        </td>
+                                                        <td>
+                                                            {{ $a['jabatan'] }}
+                                                        </td>
+                                                        <td>
+                                                            <img src="{{ asset($a['foto']) }}" alt="Foto Berita"
+                                                                width="100">
+                                                        </td>
 
-                                                </td>
-                                            </tr>
-                                        @endforeach
+                                                        <td style="text-align: center;">
+                                                            <a href='guru/edit/{{ $a['id'] }}'
+                                                                class="btn btn-warning btn-sm">Edit</a>
 
-                                    </tbody>
-                                </table>
-                            </div>
+                                                            <button class="btn btn-danger" data-toggle="modal"
+                                                                data-target="#hapusmodal">Hapus</button>
+
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-    </div>
-    </section>
-    <div class="modal fade" tabindex="-1" role="dialog" id="hapusmodal">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Hapus</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>Kamu Yakin Ingin Menghapusnya?!!</p>
-                </div>
-                <div class="modal-footer bg-whitesmoke br">
-                    <a href='guru/{{ $a['id'] }}' class="btn btn-danger btn-sm">Hapus</a>
+            </div>
+        </section>
+        <div class="modal fade" tabindex="-1" role="dialog" id="hapusmodal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Hapus</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Kamu Yakin Ingin Menghapusnya?!!</p>
+                    </div>
+                    <div class="modal-footer bg-whitesmoke br">
+                        <a href='guru/{{ $a['id'] }}' class="btn btn-danger btn-sm">Hapus</a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
     </div>
 @endsection

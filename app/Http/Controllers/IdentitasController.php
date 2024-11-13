@@ -48,7 +48,7 @@ class IdentitasController extends Controller
         return redirect()->route('identitas.index')->with('success', 'Data berhasil ditambahkan');
     }
 
-    // Method untuk menampilkan form edit data
+    // Method untuk menampilkan form edit data  b
     public function edit($id)
     {
         $title = 'Form Edit Data';
@@ -98,28 +98,12 @@ class IdentitasController extends Controller
         return redirect()->route('identitas.index')->with(['success' => 'Data Berhasil Dihapus!']);
     }
 
-    public function detail($id)
-    {
+    public function detail()
+{
+    // Ambil semua data dari tabel identitas
+    $data_identitas = Identitas::all();
 
-        // $data = $request->validate([
-        //     'nama' => 'required',  
-        //     'alamat' => 'required',
-        //     'facebook' => 'required',
-        //     'instagram' => 'required',
-        //     'youtube' => 'required',
-        //     'kor_lat' => 'required',
-        //     'kor_long' => 'required',
-        //     'url' => 'required',
-        //     'email' => 'required|email'
-        // ]);
-
-
-        $title = 'Detail Data Identitas';
-        $data_identitas = Identitas::all(); // Mengambil semua data identitas untuk ditampilkan seperti halaman identitas
-        $data = Identitas::findOrFail($id); // Mengambil data berdasarkan ID untuk halaman detail
-        return view('identitas.identitas', ['title' => $title, 'data_identitas' => $data_identitas, 'data_detail' => $data]);
-    }
-    
-
-    
+    // Kirim ke view
+    return view('identitas.detail', compact('data_identitas'));
+}
 }

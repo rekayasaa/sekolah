@@ -41,7 +41,7 @@
                     <div class="form-group row align-items-right">
                         <label for="gambar" class="form-control-label col-sm-2 text-md-right">Gambar</label>
                         <div class="col-sm-6 col-md-9">
-                            <input type="text" name="gambar" value="{{ old('gambar') }}" class="form-control"
+                            <input type="file" name="gambar" value="{{ old('gambar') }}" class="form-control"
                                 id="gambar">
                             @error('gambar')
                                 <div class="" style="width: 100%; margin-top: .25rem; font-size: 80%; color: #dc3545;">

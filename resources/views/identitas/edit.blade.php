@@ -51,6 +51,71 @@
                     </div>
 
                     <div class="form-group row align-items-right">
+                        <label for="facebook" class="form-control-label col-sm-2 text-md-right">Facebook</label>
+                        <div class="col-sm-6 col-md-9">
+                            <input type="text" name="facebook"value="{{ $data['facebook'] }}" class="form-control"
+                                id="facebook">
+                            @error('facebook')
+                                <div class="" style="width: 100%; margin-top: .25rem; font-size: 80%; color: #dc3545;">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="form-group row align-items-right">
+                        <label for="instagram" class="form-control-label col-sm-2 text-md-right">Instagram</label>
+                        <div class="col-sm-6 col-md-9">
+                            <input type="text" name="instagram"value="{{ $data['instagram'] }}" class="form-control"
+                                id="instagram">
+                            @error('instagram')
+                                <div class="" style="width: 100%; margin-top: .25rem; font-size: 80%; color: #dc3545;">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="form-group row align-items-right">
+                        <label for="youtube" class="form-control-label col-sm-2 text-md-right">YouTube</label>
+                        <div class="col-sm-6 col-md-9">
+                            <input type="text" name="youtube"value="{{ $data['youtube'] }}" class="form-control"
+                                id="youtube">
+                            @error('youtube')
+                                <div class="" style="width: 100%; margin-top: .25rem; font-size: 80%; color: #dc3545;">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="form-group row align-items-right">
+                        <label for="kor_lat" class="form-control-label col-sm-2 text-md-right">Korlat</label>
+                        <div class="col-sm-6 col-md-9">
+                            <input type="text" name="kor_lat"value="{{ $data['kor_lat'] }}" class="form-control"
+                                id="kor_lat">
+                            @error('kor_lat')
+                                <div class="" style="width: 100%; margin-top: .25rem; font-size: 80%; color: #dc3545;">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="form-group row align-items-right">
+                        <label for="kor_long" class="form-control-label col-sm-2 text-md-right">Korlong</label>
+                        <div class="col-sm-6 col-md-9">
+                            <input type="text" name="kor_long"value="{{ $data['kor_long'] }}" class="form-control"
+                                id="kor_long">
+                            @error('kor_long')
+                                <div class="" style="width: 100%; margin-top: .25rem; font-size: 80%; color: #dc3545;">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="form-group row align-items-right">
                         <label for="url" class="form-control-label col-sm-2 text-md-right">URL</label>
                         <div class="col-sm-6 col-md-9">
                             <input type="text" name="url" value="{{ $data['url'] }}" class="form-control"

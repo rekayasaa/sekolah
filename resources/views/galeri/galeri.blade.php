@@ -18,49 +18,60 @@
                         <div class="card-header">
                             <h4>Basic DataTables</h4>
                         </div>
+
                         <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-striped" id="table-1">
-                                    <thead>
-                                        <tr>
-                                            <th class="text-center">#</th>
-                                            <th>Album ID</th>
-                                            <th>Judul</th>
-                                            <th>Slug</th>
-                                            <th>Gambar</th>
-                                            <th>Keterangan</th>
-                                            <th>Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php $no = 1; ?>
-                                        @foreach ($data_galeri as $a)
-                                            <tr>
-                                                <td>{{ $no++ }}</td>
-                                                <td class="text-left">{{ $a['album_id'] }}</td>
-                                                <td>{{ $a['judul'] }}</td>
-                                                <td>{{ $a['slug'] }}</td>
-                                                <td>
-                                                    <img src="{{ asset($a['gambar']) }}" alt="Gambar Galeri" width="100">
-                                                </td>
-                                                <td>{{ $a['keterangan'] }}</td>
-                                                <td style="text-align: center;">
-                                                    <a href='galeri/edit/{{ $a['id'] }}'
-                                                        class="btn btn-warning btn-sm">Edit</a>
-                                                    <!-- Button to trigger modal -->
-                                                    <button class="btn btn-danger btn-sm" data-toggle="modal"
-                                                        data-target="#hapusmodal"
-                                                        data-id="{{ $a['id'] }}">Hapus</button>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
+                            <form action="{{ route('galeri.store') }}" method="POST">
+                                @csrf
+
+                                <!-- Tombol Tambah Data -->
+                                <a href="http://sekolah.test/galeri/tambah"class="btn btn-primary mb-3">
+                                    <div>TAMBAH DATA</div>
+                                </a>
+
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped" id="table-1">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center">#</th>
+                                                    <th>Album ID</th>
+                                                    <th>Judul</th>
+                                                    <th>Slug</th>
+                                                    <th>Gambar</th>
+                                                    <th>Keterangan</th>
+                                                    <th>Aksi</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php $no = 1; ?>
+                                                @foreach ($data_galeri as $a)
+                                                    <tr>
+                                                        <td>{{ $no++ }}</td>
+                                                        <td class="text-left">{{ $a['album_id'] }}</td>
+                                                        <td>{{ $a['judul'] }}</td>
+                                                        <td>{{ $a['slug'] }}</td>
+                                                        <td>
+                                                            <img src="{{ asset($a['gambar']) }}" alt="Gambar Galeri"
+                                                                width="100">
+                                                        </td>
+                                                        <td>{{ $a['keterangan'] }}</td>
+                                                        <td style="text-align: center;">
+                                                            <a href='galeri/edit/{{ $a['id'] }}'
+                                                                class="btn btn-warning btn-sm">Edit</a>
+                                                            <!-- Button to trigger modal -->
+                                                            <button class="btn btn-danger btn-sm" data-toggle="modal"
+                                                                data-target="#hapusmodal"
+                                                                data-id="{{ $a['id'] }}">Hapus</button>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                         </div>
                     </div>
                 </div>
-            </div>
         </section>
     </div>
 

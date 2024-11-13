@@ -20,6 +20,7 @@
                         </div>
 
                         <div class="card-body">
+                            <a href="{{ route('identitas.index') }}" class="btn btn-primary mb-3">Kembali</a>
                             <form action="{{ route('identitas.store') }}" method="POST">
                                 @csrf
 
@@ -33,64 +34,72 @@
                                                 <th>Facebook</th>
                                                 <th>Instagram</th>
                                                 <th>YouTube</th>
-                                                <th>Alamat</th>
+                                                <th>Korlat</th>
+                                                <th>Korlong</th>
                                                 <th>Url</th>
                                                 <th>Email</th>
-                                                <th>Aksi</th>
+                                                {{-- <th>Aksi</th> --}}
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php $no = 1; ?>
-                                            @foreach ($data_identitas as $a)
+                                            @foreach ($data_identitas as $index => $a)
                                                 <tr>
-                                                    <td>{{ $no++ }}</td>
-                                                    <td class="text-left">{{ $a['nama'] }}</td>
-                                                    <td>{{ $a['alamat'] }}</td>
-                                                    <td>{{ $a['facebook'] }}</td>
-                                                    <td>{{ $a['instagram'] }}</td>
-                                                    <td>{{ $a['youtube'] }}</td>
-                                                    <td>{{ $a['url'] }}</td>
-                                                    <td>{{ $a['email'] }}</td>
-                                                    <td style="text-align: center;">
-                                                        <a href='identitas/detail/edit/{{ $a['id'] }}'
+                                                    <td>{{ $loop->iteration }}</td>
+                                                    <td class="text-left">{{ $a->nama }}</td>
+                                                    <td>{{ $a->alamat }}</td>
+                                                    <td>{{ $a->facebook }}</td>
+                                                    <td>{{ $a->instagram }}</td>
+                                                    <td>{{ $a->youtube }}</td>
+                                                    <td>{{ $a->kor_lat }}</td>
+                                                    <td>{{ $a->kor_long }}</td>
+                                                    <td>{{ $a->url }}</td>
+                                                    <td>{{ $a->email }}</td>
+                                                    {{-- <td style="text-align: center;">
+                                                        <a href="{{ route('identitas.edit', $a->id) }}"
                                                             class="btn btn-warning btn-sm">Edit</a>
                                                         <button class="btn btn-danger" data-toggle="modal"
-                                                            data-target="#hapusmodal">Hapus</button>
+                                                            data-target="#hapusmodal-{{ $a->id }}">Hapus</button>
+                                                        <a href="{{ route('identitas.detail', $a->id) }}"
+                                                            class="btn btn-primary btn-sm">Detail</a>
                                                     </td>
+                                                </tr> --}}
 
-                                                </tr>
-                                            @endforeach
-                                            <td>
-                                                <a href='identitas/detail/{{ $a['id'] }}'
-                                                    class="btn btn-primary btn-sm">Detail</a>
-                                            </td>
-
-                                        </tbody>
-                                    </table>
+                                                    {{-- Modal Hapus --}}
+                                                    {{-- <div class="modal fade" tabindex="-1" role="dialog"
+                                                    id="hapusmodal-{{ $a->id }}">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title">Hapus</h5>
+                                                                <button type="button" class="close" data-dismiss="modal"
+                                                                    aria-label="Close">
+                                                                    <span aria-hidden="true">×</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <p>Kamu Yakin Ingin Menghapusnya?!</p>
+                                                            </div>
+                                                            <div class="modal-footer bg-whitesmoke br">
+                                                                <form action="{{ route('identitas.destroy', $a->id) }}"
+                                                                    method="POST">
+                                                                    @csrf
+                                                                    @method('DELETE')
+                                                                    <button type="submit"
+                                                                        class="btn btn-danger btn-sm">Hapus</button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div> --}}
                                 </div>
-                            </form>
+                                @endforeach
+                                </tbody>
+                                </table>
                         </div>
+                        </form>
                     </div>
                 </div>
             </div>
-        </section>
-        <div class="modal fade" tabindex="-1" role="dialog" id="hapusmodal">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Hapus</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Kamu Yakin Ingin Menghapusnya?!!</p>
-                    </div>
-                    <div class="modal-footer bg-whitesmoke br">
-                        <a href='identitas/{{ $a['id'] }}' class="btn btn-danger btn-sm">Hapus</a>
-                    </div>
-                </div>
-            </div>
-        </div>
+    </div>
+    </section>
     </div>
 @endsection

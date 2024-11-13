@@ -19,7 +19,7 @@ class BannerController extends Controller
     public function tambah()
     {
         $title = 'Form Tambah Data';
-        return view('banner .tambah', ['title' => $title]);
+        return view('banner.tambah', ['title' => $title]);
     }
 
     // Method untuk menyimpan data baru
