@@ -14,8 +14,8 @@ class BeritaController extends Controller
 {
     public function index()
     {
-        $title = 'Delete Data!';
-        $text = "Are you sure you want to delete?";
+        $title = 'Hapus Data!';
+        $text = "Apakah anda yakin ingin menghapus?";
         confirmDelete($title, $text);
 
         $berita = Berita::select('berita.id', 'berita.judul', 'berita.isi_berita', 'users.name AS penulis', 'kategori_berita.nama AS kategori', 'berita.headline', 'berita.publik', 'berita.gambar', 'berita.slug')
@@ -63,11 +63,6 @@ class BeritaController extends Controller
                 'kategori_id.required' => 'Kategori tidak boleh kosong',
             ]
         );
-
-        // echo '<pre>';
-        // print_r($request->input('judul'));
-        // print_r($request->judul);
-        // echo '</pre>';
 
         $data['slug'] = Str::slug($data['judul'], '-');
         $data['headline'] = isset($request->headline) ? $request->headline : 'N';
