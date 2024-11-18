@@ -14,19 +14,15 @@ use App\Http\Controllers\AlbumController;
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\SliderController;
 
-
-Route::get('/', function () {
-    return view('layout');
-});
-
-Route::get('/kategori_berita', [KategoriBeritaController::class, 'index']);
+Route::get('/', [BeritaController::class, 'index'])->name('berita.index');
 
 Route::get('berita', [BeritaController::class, 'index'])->name('berita.index');
 Route::get('berita/tambah', [BeritaController::class, 'tambah'])->name('berita.tambah');
 Route::post('berita', [BeritaController::class, 'store'])->name('berita.store');
+Route::get('berita/show/{slug}', [BeritaController::class, 'show'])->name('berita.show');
 Route::get('berita/edit/{id}', [BeritaController::class, 'edit'])->name('berita.edit');
 Route::put('berita/update/{id}', [BeritaController::class, 'update'])->name('berita.update');
-Route::get('berita/{id}', [BeritaController::class, 'destroy'])->name('berita.destroy');
+Route::delete('berita/{id}/destroy', [BeritaController::class, 'destroy'])->name('berita.destroy');
 
 Route::get('galeri', [GaleriController::class, 'index'])->name('galeri.index');
 Route::get('galeri/tambah', [GaleriController::class, 'tambah'])->name('galeri.tambah');
@@ -35,6 +31,7 @@ Route::get('galeri/edit/{id}', [GaleriController::class, 'edit'])->name('galeri.
 Route::put('galeri/update/{id}', [GaleriController::class, 'update'])->name('galeri.update');
 Route::get('galeri/{id}', [GaleriController::class, 'destroy'])->name('galeri.destroy');
 
+// Route::get('/kategori_berita', [KategoriBeritaController::class, 'index']);
 Route::get('kategori_berita', [KategoriBeritaController::class, 'index'])->name('kategori_berita.index');
 Route::get('kategori_berita/tambah', [KategoriBeritaController::class, 'tambah'])->name('kategori_berita.tambah');
 Route::post('kategori_berita', [KategoriBeritaController::class, 'store'])->name('kategori_berita.store');
@@ -98,5 +95,3 @@ Route::post('slider', [SliderController::class, 'store'])->name('slider.store');
 Route::get('slider/edit/{id}', [SliderController::class, 'edit'])->name('slider.edit');
 Route::put('slider/update/{id}', [SliderController::class, 'update'])->name(name: 'slider.update');
 Route::get('slider/{id}', [SliderController::class, 'destroy'])->name('slider.destroy');
-
-

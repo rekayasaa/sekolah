@@ -1,86 +1,96 @@
 <aside id="sidebar-wrapper">
     <div class="sidebar-brand">
-        <a href="index.html">SMK Negeri Labuang</a>
+        <a href="/">SMK Negeri Labuang</a>
     </div>
     <div class="sidebar-brand sidebar-brand-sm">
-        <a href="index.html">St</a>
+        <a href="/">St</a>
     </div>
     <ul class="sidebar-menu">
         <li class="menu-header">BERANDA</li>
-        <li class="dropdown">
-            <a href="sekolah.test" class="nav-link has-dropdown"><i class="fas fa-fire"></i><span>Dashboard</span></a>
-            <ul class="dropdown-menu">
 
-            </ul>
+        <li>
+            <a href="/" class="nav-link">
+                <i class="fas fa-fire"></i><span>Dashboard</span>
+            </a>
+        </li>
 
-        <li class="menu-item ">
-            <a href="http://sekolah.test/berita" class="menu-link">
+        <li>
+            <a href="/berita" class="nav-link">
+                <i class="far fa-file-alt"></i>
+                <span>Berita</span>
+            </a>
+        </li>
+
+        <li>
+            <a href="/kategori_berita" class="nav-link">
+                <i class="fas fa-th"></i>
+                <span>Kategori Berita</span>
+            </a>
+        </li>
+
+        <li>
+            <a href="/identitas" class="nav-link">
                 <i class="far fa-square"></i>
-                <div>Berita</div>
+                <span>Identitas</span>
             </a>
+        </li>
 
-        <li class="menu-item ">
-            <a href="http://sekolah.test/kategori_berita" class="menu-link">
+        <li>
+            <a href="/menu" class="nav-link">
                 <i class="far fa-square"></i>
-                <div>Kategori Berita</div>
+                <span>menu</span>
             </a>
-        <li class="menu-item ">
-            <a href="http://sekolah.test/identitas" class="menu-link">
+        </li>
+
+        <li>
+            <a href="/guru" class="nav-link">
                 <i class="far fa-square"></i>
-                <div>Identitas</div>
+                <span>Guru</span>
             </a>
+        </li>
 
-        <li class="menu-item ">
-            <a href="http://sekolah.test/menu" class="menu-link">
+
+        <li>
+            <a href="/galeri" class="nav-link">
                 <i class="far fa-square"></i>
-                <div>menu</div>
+                <span>Galeri</span>
             </a>
+        </li>
 
-        <li class="menu-item ">
-            <a href="http://sekolah.test/guru" class="menu-link">
+        <li>
+            <a href="/downlod" class="nav-link">
                 <i class="far fa-square"></i>
-                <div>Guru</div>
+                <span>Download</span>
             </a>
+        </li>
 
-
-        <li class="menu-item ">
-            <a href="http://sekolah.test/galeri" class="menu-link">
+        <li>
+            <a href="/halaman_statis" class="nav-link">
                 <i class="far fa-square"></i>
-                <div>Galeri</div>
+                <span>Halaman Statis</span>
             </a>
+        </li>
 
-        <li class="menu-item ">
-            <a href="http://sekolah.test/downlod" class="menu-link">
+        <li>
+            <a href="/album" class="nav-link">
                 <i class="far fa-square"></i>
-                <div>Download</div>
+                <span>Album</span>
             </a>
+        </li>
 
-        <li class="menu-item ">
-            <a href="http://sekolah.test/halaman_statis" class="menu-link">
+        <li>
+            <a href="/banner" class="menu-link">
                 <i class="far fa-square"></i>
-                <div>Halaman Statis</div>
+                <span>Banner</span>
             </a>
+        </li>
 
-        <li class="menu-item ">
-            <a href="http://sekolah.test/album" class="menu-link">
+        <li>
+            <a href="/slider" class="menu-link">
                 <i class="far fa-square"></i>
-                <div>Album</div>
+                <span>Slider</span>
             </a>
-
-        <li class="menu-item ">
-            <a href="http://sekolah.test/banner" class="menu-link">
-                <i class="far fa-square"></i>
-                <div>Banner</div>
-            </a>
-
-        <li class="menu-item ">
-            <a href="http://sekolah.test/slider" class="menu-link">
-                <i class="far fa-square"></i>
-                <div>Slider</div>
-            </a>
-
-
-            </a>
-            </div>
+        </li>
+    </ul>
 </aside>
 </div>

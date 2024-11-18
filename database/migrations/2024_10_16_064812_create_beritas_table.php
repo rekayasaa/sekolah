@@ -17,12 +17,12 @@ return new class extends Migration
             $table->text(column: 'isi_berita');
             $table->integer('penulis_id');
             $table->integer('kategori_id');
-            $table->integer('tag_id');
+            $table->integer('tag_id')->nullable();
             $table->string('slug');
-            $table->enum('headline', ['Y', 'N']);
-            $table->enum('publik', ['Y', 'N']);
+            $table->enum('headline', ['Y', 'N'])->default('N');
+            $table->enum('publik', ['Y', 'N'])->default('N');
             $table->string('gambar');
-            $table->integer('hit');
+            $table->integer('hit')->nullable();
             $table->timestamps();
         });
     }

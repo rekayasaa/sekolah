@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-    <title>Components &rsaquo; Table &mdash; Stisla</title>
+    <title>{{ $option['title'] }} | {{ $option['active'] }}</title>
 
     <!-- Stylesheets -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
@@ -19,6 +19,9 @@
     <!-- Template CSS -->
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/components.css') }}">
+
+    <!-- CUSTOM CSS LOAD HERE -->
+    @yield('custom_css')
 
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-94034622-3"></script>
@@ -77,17 +80,14 @@
         <script src="{{ asset('assets/js/page/components-table.js') }}"></script>
         <script src="{{ asset('assets/js/page/modules-datatables.js') }}"></script>
 
+        <!-- CUSTOM JS LOAD HERE -->
+        @yield('custom_js')
+
         <!-- Template JS File -->
         <script src="{{ asset('assets/js/scripts.js') }}"></script>
         <script src="{{ asset('assets/js/custom.js') }}"></script>
-        <script>
-            $("#table-1").dataTable({
-                "columnDefs": [{
-                    "sortable": false,
-                    "targets": [2, 3]
-                }]
-            });
-        </script>
+
+        @include('sweetalert::alert')
 </body>
 
 </html>
