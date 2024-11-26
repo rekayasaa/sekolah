@@ -4,23 +4,38 @@ namespace App\Http\Controllers;
 
 use \App\Models\Downlod;
 use Illuminate\Http\Request;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class DownlodController extends Controller
 {
     // Method untuk menampilkan data
     public function index()
     {
-        $downlod = Downlod ::latest()->get();
-        $title = 'DATA DOWNLOAD';
-        return view('downlod.downlod', ['title' => $title, 'data_downlod' => $downlod]);
+        $title = 'Hapus Data!';
+        $text = "Apakah anda yakin ingin menghapus?";
+        confirmDelete($title, $text);
+
+        $downlod = Downlod ::latest()
+        ->orderBy('id','desc')
+        ->get();
+
+        $option = [
+            'title' => 'Modul Downlod',
+            'modul' => 'Downlod',
+            'active' => 'Daftar Downlod'
+        ];        
+        return view('downlod.downlod', ['option' => $option, 'data_downlod' => $downlod]);
     }
 
     // Method untuk menampilkan form tambah data
     public function tambah (){
         
-        $title = 'Form Tambah Data';
-        
-        return view('downlod.tambah', ['title'=>$title]);
+        $option = [
+            'title' => 'Modul Downlod',
+            'modul' => 'Downlod',
+            'active' => 'Tambah Downlod'
+        ];        
+        return view('downlod.tambah', ['option'=>$option]);
         
     }
 
@@ -35,6 +50,7 @@ class DownlodController extends Controller
 
     // Simpan data ke database menggunakan model
     Downlod::create($data);
+    Alert::success('Sukses', 'Data berhasil ditambahkan');
 
     // Redirect kembali ke halaman index dengan pesan sukses
     return redirect()->route('downlod.index')->with('success', 'Data berhasil ditambahkan');
@@ -43,9 +59,14 @@ class DownlodController extends Controller
     // Method untuk menampilkan form edit data
     public function edit($id)
     {
-        $title = 'Form Edit Data';
         $data = downlod::findOrFail($id); // Menggunakan findOrFail untuk kemudahan
-        return view('downlod.edit', ['title' => $title, 'data' => $data]);
+
+        $option = [
+            'title' => 'Modul Downlod',
+            'modul' => 'Downlod',
+            'active' => 'Tambah Downlod'
+        ];         
+        return view('downlod.edit', ['option' => $option, 'data' => $data]);
     }
 
     // Method untuk mengupdate data
@@ -53,34 +74,21 @@ class DownlodController extends Controller
     {
         // Validasi input
         $data = $request->validate([
-         'judul' => 'required',
-            'file' => 'required',
-            'hit' => 'required'
+           'judul' => 'required',
+        'file' => 'required',
+        'hit' => 'required'
         ]);
 
-        // Temukan data berdasarkan ID dan update
-        $identitas = downlod::findOrFail($id);
-        $identitas->update($data);
-
-        // Redirect setelah update
-        return redirect()->route('dwonlod.index')->with('success', 'Data berhasil diubah');
+        downlod::where('id', $id)->update($data);
+        Alert::success('Sukses', 'Data berhasil diubah');
+        return redirect()->route('downlod.index');
     }
 
     public function destroy($id)
     {
-        $data = downlod::find($id);
-    
-        if (!$data) {
-            return redirect()->route('downlod.index')->with(['error' => 'Data tidak ditemukan!']);
-        }
-    
-        // Contoh validasi tambahan sebelum menghapus
-        if ($data->status == 'protected') {
-            return redirect()->route('downlod.index')->with(['error' => 'Data ini tidak bisa dihapus!']);
-        }
-    
+        $data = downlod::findOrFail($id);
         $data->delete();
-        return redirect()->route('downlod.index')->with(['success' => 'Data Berhasil Dihapus!']);
+        alert()->success('Hore!', 'Data berhasil dihapus');
+        return redirect()->route('downlod.index');
     }
-    
 }

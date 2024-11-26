@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use \App\Models\Guru;
 use Illuminate\Http\Request;
+use RealRashid\SweetAlert\Facades\Alert;
 
 
 
@@ -11,16 +12,32 @@ class GuruController extends Controller
 {
     public function index()
     {
-        $guru = Guru::latest()->get();
-        $title = 'DATA GURU';
-        return view('guru.guru', ['title'=>$title, 'data_guru'=>$guru]);
+        $title = 'Hapus Data!';
+        $text = "Apakah anda yakin ingin menghapus?";
+        confirmDelete($title, $text);
+
+        $guru = Guru::latest()
+        ->orderBy('id','desc')
+        ->get();
+
+       $option = [
+            'title' => 'Modul Guru',
+            'modul' => 'Guru',
+            'active' => 'Daftar Guru'
+        ];
+        return view('guru.guru', ['option'=>$option, 'data_guru'=>$guru]);
     }
 
     public function tambah (){
         
-        $title = 'Form Tambah Data';
+        $option = [
+            'title' => 'Modul Guru',
+            'modul' => 'Guru',
+            'active' => 'Daftar Guru'
+        ];
+
         
-        return view('guru.tambah', ['title'=>$title]);
+        return view('guru.tambah', ['option'=>$option]);
         
     }
 
@@ -33,6 +50,14 @@ class GuruController extends Controller
             'tgl_lahir'     => 'required',
             'jabatan'     => 'required',
             'foto'   => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:5500'
+        ],
+        [
+            'nama.required' => 'nama tidak boleh kosong',
+            'nip.required' => 'nip  tidak boleh kosong',
+            'tempat_lahir.required' => 'tempat lahir tidak boleh kosong',
+            'tgl_lahir.required' => 'tanggal lahir tidak boleh kosong',
+            'jabatan.required' => 'jabatan tidak boleh kosong',
+            'foto.required' => 'foto tidak boleh kosong',
         ]);
     
         // Handle gambar upload
@@ -46,7 +71,7 @@ class GuruController extends Controller
         }
     
         Guru::create($data);
-    
+        Alert::success('Sukses', 'Data berhasil ditambahkan');
         return redirect()->route('guru.index')->with('success', 'Data berhasil ditambahkan');
     }
     
@@ -55,9 +80,15 @@ class GuruController extends Controller
 // Method untuk menampilkan form edit data
 public function edit($id)
 {
-    $title = 'Form Edit Data';
+
     $data = guru::findOrFail($id); // Menggunakan findOrFail untuk kemudahan
-    return view('guru.edit', ['title' => $title, 'data' => $data]);
+
+    $option = [
+        'title' => 'Modul Guru',
+        'modul' => 'Guru',
+        'active' => 'Daftar Guru'
+    ];
+    return view('guru.edit', ['option' => $option, 'data' => $data]);
 }
 
 // Method untuk mengupdate data
@@ -83,7 +114,7 @@ $data['foto'] = '/storage/' . $filePath;
 }
 
 guru::where('id', $id)->update($data);
-
+Alert::success('Sukses', 'Data berhasil diubah');
 return redirect()->route('guru.index')->with('success', 'Data berhasil diubah');
 }
 
@@ -91,6 +122,7 @@ public function destroy($id)
     {
         $data = guru::findOrFail($id);
         $data->delete();
+        alert()->success('Hore!', 'Data berhasil dihapus');
         return redirect()->route('guru.index')->with('success', 'Data berhasil dihapus');
     }
 

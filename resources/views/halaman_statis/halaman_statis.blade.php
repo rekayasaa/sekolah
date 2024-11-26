@@ -4,11 +4,11 @@
     <div class="main-content" style="min-height: 490px;">
         <section class="section">
             <div class="section-header">
-                <h1>DataTables</h1>
+                <h1>{{ $option['title'] }}</h1>
                 <div class="section-header-breadcrumb">
-                    <div class="breadcrumb-item active"><a href="#">Dashboard</a></div>
-                    <div class="breadcrumb-item"><a href="#">Modules</a></div>
-                    <div class="breadcrumb-item">DataTables</div>
+                    <div class="breadcrumb-item active"><a href="/">Dashboard</a></div>
+                    <div class="breadcrumb-item"><a href="/halaman_statis">{{ $option['modul'] }}</a></div>
+                    <div class="breadcrumb-item">{{ $option['active'] }}</div>
                 </div>
             </div>
 
@@ -17,94 +17,71 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h4>Basic DataTables</h4>
+                            <h4>{{ $option['active'] }}</h4>
                         </div>
 
                         <div class="card-body">
-                            <form action="{{ route('halaman_statis.store') }}" method="POST">
-                                @csrf
+                            @csrf
 
-                                <!-- Tombol Tambah Data -->
-                                <a href="http://sekolah.test/halaman_statis/tambah"class="btn btn-primary mb-3">
-                                    <div>TAMBAH DATA</div>
-                                </a>
+                            <!-- Tombol Tambah Data -->
+                            <a href="/halaman_statis/tambah"class="btn btn-primary mb-3">
+                                <div>Tambah</div>
+                            </a>
 
-                                <div class="card-body">
-                                    <div class="table-responsive">
-                                        <table class="table table-striped" id="table-1">
-                                            <thead>
-                                                <tr>
-                                                    <th class="text-center">
-                                                        #
-                                                    <th>Judul</th>
-                                                    <th>Isi Halaman</th>
-                                                    <th>gambar</th>
-                                                    <th>Aksi</th>
-                                                </tr>
-                                            </thead>
+                            <div class="table-responsive">
+                                <table class="table table-striped" id="table-1">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">
+                                                #
+                                            <th>gambar</th>
+                                            <th>Judul</th>
+                                            <th>Isi Halaman</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
 
-                                            <tbody class="table-border-bottom-0">
-                                                <?php
-                                                $no = 1;
-                                                ?>
-                                                @foreach ($data_statis as $a)
-                                                    <tr>
-                                                        <td>
-                                                            {{ $no++ }}
-                                                        </td>
-                                                        <td class="text-left">
-                                                            {{ $a['judul'] }}
-                                                        </td>
-                                                        <td>
-                                                            {{ $a['isi_halaman'] }}
-                                                        </td>
-                                                        <td>
-                                                            <img src="{{ asset($a['gambar']) }}" alt="Gambar HalamanStatis"
+                                    <tbody>
+                                        <?php
+                                        $no = 1;
+                                        ?>
+                                        @if ($data_statis)
+                                            @foreach ($data_statis as $a)
+                                                <tr class="mt-4 mb-4">
+                                                    <td style="text-align: center;">
+                                                        {{ $no++ }}
+                                                    </td>
+                                                    <td>
+                                                        <a href="{{ asset($a['gambar']) }}" target="_blank">
+                                                            <img src="{{ asset($a['gambar']) }}" alt="Gambar Halaman Statis"
                                                                 width="100">
-                                                        </td>
+                                                        </a>
+                                                    </td>
+                                                    <td class="text-left">
+                                                        {{ $a['judul'] }}
+                                                    </td>
+                                                    <td>
+                                                        {{ $a['isi_halaman'] }}
+                                                    </td>
 
-                                                        <td style="text-align: center;">
-                                                            <a href='halaman_statis/edit/{{ $a['id'] }}'
-                                                                class="btn btn-warning btn-sm">Edit</a>
-                                                            <button class="btn btn-danger" data-toggle="modal"
-                                                                data-target="#hapusmodal">Hapus</button>
-                                                            {{-- <div class="dropdown">
-                                    <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
-                                        data-bs-toggle="dropdown"><i class="mdi mdi-dots-vertical"></i></button>
-                                    <div class="dropdown-menu">
-                                        
-                                    </div>
-                                </div> --}}
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
+                                                    <td style="text-align: center;">
+                                                        <a href='halaman_statis/edit/{{ $a['id'] }}'
+                                                            class="btn btn-warning btn-sm mb-2" title="Edit"><i
+                                                                class="fas fa-pencil-alt"></i></a>
+                                                        <a href='halaman_statis/{{ $a['id'] }}/destroy'
+                                                            class="btn btn-danger btn-sm mb-2" data-confirm-delete="true"
+                                                            title="Hapus"><i class="fas fa-trash"></i></a>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        @endif
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
-        <div class="modal fade" tabindex="-1" role="dialog" id="hapusmodal">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Hapus</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Kamu Yakin Ingin Menghapusnya?!!</p>
-                    </div>
-                    <div class="modal-footer bg-whitesmoke br">
-                        <a href='halaman_statis/{{ $a['id'] }}' class="btn btn-danger btn-sm">Hapus</a>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 @endsection

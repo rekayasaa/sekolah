@@ -8,6 +8,6 @@ class Album extends Model
 {
     protected $primaryKey = 'id';
     protected $table = 'album';
-    protected $fillable = ['jududl','slug','aktif'];
+    protected $fillable = ['judul','slug','aktif'];
     public $timestamps = false;
 }

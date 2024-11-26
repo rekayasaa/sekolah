@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use \App\Models\HalamanStatis;
 use Illuminate\Http\Request;
+use \App\Models\HalamanStatis;
+use RealRashid\SweetAlert\Facades\Alert;
 
 
 
@@ -11,15 +12,32 @@ class HalamanStatisController extends Controller
 {
     public function index()
     {
-        $statis = HalamanStatis::latest()->get();
-        $title = 'DATA STATIS';
-        return view('halaman_statis.halaman_statis', ['title'=>$title, 'data_statis'=>$statis]);
+       
+        $title = 'Hapus Data!';
+        $text = "Apakah anda yakin ingin menghapus?";
+        confirmDelete($title, $text);
+
+        $halaman_statis = HalamanStatis::latest()
+        ->orderBy('id','desc')
+        ->get();
+
+       $option = [
+            'title' => 'Modul Halaman_Statis',
+            'modul' => 'Hlaman_Statis',
+            'active' => 'Daftar Halman_Statis'
+        ];
+        return view('halaman_statis.halaman_statis', ['option'=>$option, 'data_statis'=>$halaman_statis]);
     }
 
     public function tambah()
     {
-        $title = 'Form Tambah Data';
-        return view('halaman_statis.tambah', ['title' => $title]);
+        $option = [
+            'title' => 'Modul Halaman_Statis',
+            'modul' => 'Halaman_Statis',
+            'active' => 'Daftar Halaman_Statis'
+        ];
+
+        return view('halaman_statis.tambah', ['option' => $option]);
     }
 
     public function store(Request $request)
@@ -29,7 +47,13 @@ class HalamanStatisController extends Controller
         'isi_halaman'    => 'required',
         'gambar'   => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
 
-    ]);
+    ],
+    [
+        'judul.required' => 'Judul tidak boleh kosong',
+        'isi_halaman.required' => 'Isi halaman Berita tidak boleh kosong',
+        'gambar.required' => 'Gambar tidak boleh kosong',
+    ]
+);
 
     // Handle gambar upload
     if ($request->hasFile('gambar')) {
@@ -42,16 +66,23 @@ class HalamanStatisController extends Controller
     }
 
     HalamanStatis::create($data);
-
+    Alert::success('Sukses', 'Data berhasil ditambahkan');
     return redirect()->route('halaman_statis.index')->with('success', 'Data berhasil ditambahkan');
 }
 
 
 public function edit($id)
 {
-    $title = 'Form Edit Data';
-    $data = HalamanStatis::where('id', $id)->first();
-    return view('halaman_statis.edit', ['title'=>$title,'data'=>$data]);
+
+    $data = HalamanStatis::findOrFail($id); // Menggunakan findOrFail untuk kemudahan
+
+    $option = [
+        'title' => 'Modul Halaman_Statis',
+        'modul' => 'Halaman_Statis',
+        'active' => 'Daftar Halaman_Statis'
+    ];
+
+    return view('halaman_statis.edit', ['option'=>$option,'data'=>$data]);
 }
 
 public function update(Request $request, $id)
@@ -73,7 +104,7 @@ public function update(Request $request, $id)
     }
 
     HalamanStatis::where('id', $id)->update($data);
-
+    Alert::success('Sukses', 'Data berhasil diubah');
     return redirect()->route('halaman_statis.index')->with('success', 'Data berhasil diubah');
 }
 
@@ -81,6 +112,7 @@ public function destroy($id)
     {
         $data = HalamanStatis::findOrFail($id);
         $data->delete();
+        alert()->success('Hore!', 'Data berhasil dihapus');
         return redirect()->route(route: 'halaman_statis.index')->with('success', 'Data berhasil dihapus');
     }
 

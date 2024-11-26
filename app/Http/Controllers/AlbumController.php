@@ -2,88 +2,102 @@
 
 namespace App\Http\Controllers;
 
-use \App\Models\Album;
+use App\Models\Album;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
+use RealRashid\SweetAlert\Facades\Alert;
+
+
 
 class AlbumController extends Controller
 {
-    // Method untuk menampilkan data
     public function index()
     {
-        $album = Album::latest()->get();
-        $title = 'DATA ALBUM';
-        return view('album.album', ['title' => $title, 'data_album' => $album]);
-    }
+        $title = 'Hapus Data!';
+        $text = "Apakah anda yakin ingin menghapus?";
+        confirmDelete($title, $text);
 
-    // Method untuk menampilkan form tambah data
-    public function tambah()
-    {
-        $title = 'Form Tambah Data';
-        return view('album.tambah', ['title' => $title]);
-    }
+        $album = Album::latest()
+        ->orderBy('id','desc')
+        ->get();
 
-    // Method untuk menyimpan data baru
-    public function store(Request $request)
-    {
-        // Validasi input
-        $data = $request->validate([
-            'judul' => 'required',
-            'slug' => 'required',
-            'aktif' => 'required'
-            
-        ]);
-
+        $option = [
+            'title' => 'Modul Album',
+            'modul' => 'Album',
+            'active' => 'Daftar Album'
+        ];
        
-
-        // Simpan data ke database menggunakan model
-        Album::create($data);
-
-        // Redirect kembali ke halaman index dengan pesan sukses
-        return redirect()->route('album.index')->with('success', 'Data berhasil ditambahkan');
+        return view('album.album', ['option'=>$option, 'data_album'=>$album]);
     }
 
-    // Method untuk menampilkan form edit data
-    public function edit($id)
-    {
-        $title = 'Form Edit Data';
-        $data = Album::findOrFail($id); // Menggunakan findOrFail untuk kemudahan
-        return view('album.edit', ['title' => $title, 'data' => $data]);
+    public function tambah (){
+        
+        $option = [
+            'title' => 'Modul Album',
+            'modul' => 'Album',
+            'active' => 'Daftar Album'
+        ];
+        
+        return view('album.tambah', ['option'=>$option]);
+        
     }
 
-    // Method untuk mengupdate data
-    public function update(Request $request, $id)
+    public function store(Request $request)
+{
+     // Validasi input
+     $data = $request->validate(
+        [
+            'judul' => 'required'
+        ],
+        [
+            'judul.required' => 'Judul  tidak boleh kosong'
+        ]
+    );
+
+    $data['slug'] = Str::slug($_POST['judul'], '-');
+    $data['aktif'] = isset($request->aktif) ? $request->aktif : 'N';
+
+    // Simpan data ke database menggunakan model
+    Album::create($data);
+    Alert::success('Sukses', 'Data berhasil ditambahkan');
+    return redirect()->route('album.index')->with('success', 'Data berhasil ditambahkan');
+}
+
+
+public function edit($id)
+{
+    $data = album::where('id', $id)->first();
+    $option = [
+        'title' => 'Modul Album',
+        'modul' => 'Album',
+        'active' => 'Edit Album'
+    ];    
+    return view('album.edit', ['option'=>$option,'data'=>$data]);
+}
+
+public function update(Request $request, $id)
+
+{
+    $data = $request->validate([
+        'judul'    => 'required'
+    ]);
+
+    $data['slug'] = Str::slug($data['judul'], '-');
+    $data['aktif'] = isset($request->aktif) ? $request->aktif : 'N';
+
+    album::where('id', $id)->update($data);
+    Alert::success('Sukses', 'Data berhasil diubah');
+    return redirect()->route('album.index');
+}
+
+public function destroy($id)
     {
-        // Validasi input
-        $data = $request->validate([
-            'judul' => 'required',  
-            'slug' => 'required',
-            'aktif' => 'required'
-            
-        ]);
-
-        // Temukan data berdasarkan ID dan update
-        $album = Album::findOrFail($id);
-        $album->update($data);
-
-        // Redirect setelah update
-        return redirect()->route('album.index')->with('success', 'Data berhasil diubah');
-    }
-
-    public function destroy($id)
-    {
-        $data = Album::find($id);
-    
-        if (!$data) {
-            return redirect()->route('album.index')->with(['error' => 'Data tidak ditemukan!']);
-        }
-    
-        // Contoh validasi tambahan sebelum menghapus
-        if ($data->status == 'protected') {
-            return redirect()->route('album.index')->with(['error' => 'Data ini tidak bisa dihapus!']);
-        }
-    
+        $data = album::findOrFail($id);
         $data->delete();
-        return redirect()->route('album.index')->with(['success' => 'Data Berhasil Dihapus!']);
+        alert()->success('Hore!', 'Data berhasil dihapus');
+        return redirect()->route('album.index');
     }
+
     
 }

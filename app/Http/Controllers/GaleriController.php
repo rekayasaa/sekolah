@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Album;
 use \App\Models\Galeri;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use RealRashid\SweetAlert\Facades\Alert;
 
 
 
@@ -11,16 +14,37 @@ class GaleriController extends Controller
 {
     public function index()
     {
-        $galeri = Galeri::latest()->get();
-        $title = 'DATA GALERI';
-        return view('galeri.galeri', ['title'=>$title, 'data_galeri'=>$galeri]);
+        $title = 'Hapus Data!';
+        $text = "Apakah anda yakin ingin menghapus?";
+        confirmDelete($title, $text);
+        
+        $galeri = Galeri::select('galeri.id', 'album.judul AS album','galeri.judul','galeri.slug','galeri.gambar', 'galeri.keterangan')
+        ->join('album', 'galeri.album_id', '=', 'album.id')
+        ->orderBy('id','desc')
+        ->get();
+        
+        $option = [
+            'title' => 'Modul Galeri',
+            'modul' => 'Galeri',
+            'active' => 'Daftar Galeri'
+        ];
+
+        return view('galeri.galeri', ['option'=>$option, 'data_galeri'=>$galeri]);
     }
 
     public function tambah (){
         
-        $title = 'Form Tambah Data';
+         $album  = Album::select('id', 'judul')
+         ->where('aktif','Y')
+         ->get();
+
+        $option = [
+            'title' => 'Modul Galeri',
+            'modul' => 'Galeri',
+            'active' => 'Daftar Galeri'
+        ];
         
-        return view('galeri.tambah', ['title'=>$title]);
+        return view('galeri.tambah', ['option'=>$option, 'album' => $album]);
         
     }
 
@@ -29,10 +53,15 @@ class GaleriController extends Controller
     $data = $request->validate([
         'album_id' => 'required',
         'judul'    => 'required',
-        'slug'     => 'required',
-        'gambar'   => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:5500',
-        'keterangan' => 'required'
-    ]);
+        'keterangan' => 'required',
+        'gambar'   => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:10000'
+    ],
+[
+     'album_id.required' => 'Album tidak boleh kosong',
+     'judul.required' => 'Judul tidak boleh kosong',
+     'keterangan.required' => 'keterangan tidak boleh kosong'
+]);
+$data['slug'] = Str::slug($data['judul'], '-');
 
     // Handle gambar upload
     if ($request->hasFile('gambar')) {
@@ -45,16 +74,24 @@ class GaleriController extends Controller
     }
 
     Galeri::create($data);
-
-    return redirect()->route('galeri.index')->with('success', 'Data berhasil ditambahkan');
+    Alert::success('Sukses', 'Data berhasil ditambahkan');
+    return redirect()->route(route: 'galeri.index');
 }
 
 
 public function edit($id)
 {
-    $title = 'Form Edit Data';
-    $data = galeri::where('id', $id)->first();
-    return view('galeri.edit', ['title'=>$title,'data'=>$data]);
+    $album  = Album::select('id', 'judul')
+    ->where('aktif','Y')
+    ->get();
+    $data = Galeri::findOrFail($id); // Menggunakan findOrFail untuk kemudahan
+
+    $option = [
+        'title' => 'Modul Album',
+        'modul' => 'Album',  
+        'active' => 'Edit Album'
+    ];    
+    return view('galeri.edit', ['option'=>$option,'album'=>$album, 'data'=>$data]);
 }
 
 public function update(Request $request, $id)
@@ -63,10 +100,12 @@ public function update(Request $request, $id)
     $data = $request->validate([
         'album_id' => 'required',
         'judul' => 'required',
-        'slug' => 'required',
-        'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:5500',
-        'keterangan' => 'required'
+        'keterangan' => 'required',
+        'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:10000'
     ]);
+
+    $data['slug'] = Str::slug($data['judul'], '-');
+
     
     // Handle gambar upload
     if ($request->hasFile('gambar')) {
@@ -77,16 +116,15 @@ public function update(Request $request, $id)
     }
 
     galeri::where('id', $id)->update($data);
-
-    return redirect()->route('galeri.index')->with('success', 'Data berhasil diubah');
+    Alert::success('Sukses', 'Data berhasil diubah');
+    return redirect()->route('galeri.index');
 }
 
 public function destroy($id)
     {
         $data = galeri::findOrFail($id);
         $data->delete();
-        return redirect()->route(route: 'galeri.index')->with('success', 'Data berhasil dihapus');
+        alert()->success('Hore!', 'Data berhasil dihapus');
+        return redirect()->route('galeri.index');
     }
-
-    
 }

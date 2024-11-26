@@ -6,6 +6,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\KategoriBerita;
 use Illuminate\Routing\Controller;
+use RealRashid\SweetAlert\Facades\Alert;
 
 
 
@@ -17,7 +18,9 @@ class KategoriBeritaController extends Controller
         $text = "Apakah anda yakin ingin menghapus?";
         confirmDelete($title, $text);
 
-        $kategori = KategoriBerita::latest()->get();
+        $kategori = KategoriBerita::latest()
+        ->orderBy('id','desc')
+        ->get();
 
         $option = [
             'title' => 'Modul Kategori Berita',
@@ -56,7 +59,7 @@ class KategoriBeritaController extends Controller
 
         // Simpan data ke database menggunakan model
         KategoriBerita::create($data);
-
+        Alert::success('Sukses', 'Data berhasil ditambahkan');
         // Redirect kembali ke halaman index dengan pesan sukses
         return redirect()->route('kategori_berita.index')->with('success', 'Data berhasil ditambahkan');
     }
@@ -64,9 +67,19 @@ class KategoriBeritaController extends Controller
 
     public function edit($id)
     {
-        $title = 'Form Edit Data';
-        $data = KategoriBerita::where('id', $id)->first();
-        return view('kategori_berita.edit', ['title' => $title, 'data' => $data]);
+
+        $kategori_berita  = KategoriBerita::select('id', 'nama')
+        ->where('aktif','Y')
+        ->get();
+        $data = KategoriBerita::findOrFail($id); // Menggunakan findOrFail untuk kemudahan
+
+        $option = [
+            'title' => 'Modul Kategori Berita',
+            'modul' => 'Kategori Berita',
+            'active' => 'Edit Kategori Berita'
+        ];
+    
+        return view('kategori_berita.edit', ['option' => $option, 'data' => $data]);
     }
 
     public function update(Request $request, $id)
@@ -74,19 +87,23 @@ class KategoriBeritaController extends Controller
     {
         $data = $request->validate([
             'nama' => 'required',
-            'slug' => 'required',
-            'aktif' => 'required',
+    
 
         ]);
 
-        KategoriBerita::where('id', $id)->update($data);
+        $data['slug'] = Str::slug($data['nama'], '-');
+        $data['aktif'] = isset($request->aktif) ? $request->aktif : 'N';
 
-        return redirect()->route('kategori_berita.index')->with('success', 'Data berhasil diubah');
+
+        KategoriBerita::where('id', $id)->update($data);
+        Alert::success('Sukses', 'Data berhasil diubah');
+        return redirect()->route('kategori_berita.index');
     }
     public function destroy($id)
     {
-        $data = KategoriBerita::findOrFail($id);
+        $data = kategoriberita::findOrFail($id);
         $data->delete();
-        return redirect()->route('kategori_berita.index')->with('success', 'Data berhasil dihapus');
+        alert()->success('Hore!', 'Data berhasil dihapus');
+        return redirect()->route('kategori_berita.index');
     }
 }

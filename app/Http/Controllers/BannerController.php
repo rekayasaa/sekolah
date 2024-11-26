@@ -4,22 +4,38 @@ namespace App\Http\Controllers;
 
 use \App\Models\Banner;
 use Illuminate\Http\Request;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class BannerController extends Controller
 {
     // Method untuk menampilkan data
     public function index()
     {
-        $banner = Banner::latest()->get();
-        $title = 'DATA BANNER';
-        return view('banner.banner', ['title' => $title, 'data_banner' => $banner]);
+        $title = 'Hapus Data!';
+        $text = "Apakah anda yakin ingin menghapus?";
+        confirmDelete($title, $text);
+
+        $banner = Banner::latest()
+        ->orderBy('id','desc')
+        ->get();
+
+        $option = [
+            'title' => 'Modul Banner',
+            'modul' => 'Banner',
+            'active' => 'Daftar Banner'
+        ];
+        return view('banner.banner', ['option' => $option, 'data_banner' => $banner]);
     }
 
     // Method untuk menampilkan form tambah data
     public function tambah()
     {
-        $title = 'Form Tambah Data';
-        return view('banner.tambah', ['title' => $title]);
+        $option = [
+            'title' => 'Modul Banner',
+            'modul' => 'Banner',
+            'active' => 'Daftar Banner'
+        ];
+        return view('banner.tambah', ['option' => $option]);
     }
 
     // Method untuk menyimpan data baru
@@ -31,23 +47,42 @@ class BannerController extends Controller
             'url' => 'required',
             'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:5500',
             
-        ]);
+        ],
+        [
+            'judul.required' => 'Judul tidak boleh kosong',
+            'url.required' => 'Url  tidak boleh kosong',
+            'gambar.required' => 'Gambar  tidak boleh kosong'
+        ]
+    );
 
-       
+        // Handle gambar upload
+        if ($request->hasFile('gambar')) { 
+            $file = $request->file('gambar');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $filePath = $file->storeAs('uploads/banner', $fileName, 'public');
+    
+            // Simpan path file gambar di data
+            $data['gambar'] = '/storage/' . $filePath; // Ubah 'gambar' menjadi 'foto'
+        }
 
-        // Simpan data ke database menggunakan model
         Banner::create($data);
-
-        // Redirect kembali ke halaman index dengan pesan sukses
+        Alert::success('Sukses', 'Data berhasil ditambahkan');
         return redirect()->route('banner.index')->with('success', 'Data berhasil ditambahkan');
     }
 
     // Method untuk menampilkan form edit data
    public function edit($id)
    {
-       $title = 'Form Edit Data';
+       
        $data = banner::findOrFail($id); // Menggunakan findOrFail untuk kemudahan
-       return view('banner.edit', ['title' => $title, 'data' => $data]);
+
+       $option = [
+        'title' => 'Modul Banner',
+        'modul' => 'Banner',
+        'active' => 'Daftar Banner'
+    ];
+
+       return view('banner.edit', ['option' => $option, 'data' => $data]);
    }
 
    // Method untuk mengupdate data
@@ -70,25 +105,16 @@ class BannerController extends Controller
 }
 
 banner::where('id', $id)->update($data);
-
+Alert::success('Sukses', 'Data berhasil diubah');
 return redirect()->route('banner.index')->with('success', 'Data berhasil diubah');
 }
 
     public function destroy($id)
     {
-        $data = Banner::find($id);
-    
-        if (!$data) {
-            return redirect()->route('banner.index')->with(['error' => 'Data tidak ditemukan!']);
-        }
-    
-        // Contoh validasi tambahan sebelum menghapus
-        if ($data->status == 'protected') {
-            return redirect()->route('banner.index')->with(['error' => 'Data ini tidak bisa dihapus!']);
-        }
-    
+        $data = banner::findOrFail($id);
         $data->delete();
-        return redirect()->route('banner.index')->with(['success' => 'Data Berhasil Dihapus!']);
+        alert()->success('Hore!', 'Data berhasil dihapus');
+        return redirect()->route('banner.index')->with('success', 'Data berhasil dihapus');
     }
     
 }

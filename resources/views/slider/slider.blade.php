@@ -4,11 +4,11 @@
     <div class="main-content" style="min-height: 490px;">
         <section class="section">
             <div class="section-header">
-                <h1>{{ $title }}</h1>
+                <h1>{{ $option['title'] }}</h1>
                 <div class="section-header-breadcrumb">
-                    <div class="breadcrumb-item active"><a href="#">Dashboard</a></div>
-                    <div class="breadcrumb-item"><a href="#">Modules</a></div>
-                    <div class="breadcrumb-item">DataTables</div>
+                    <div class="breadcrumb-item active"><a href="/">Dashboard</a></div>
+                    <div class="breadcrumb-item"><a href="/slider">{{ $option['modul'] }}</a></div>
+                    <div class="breadcrumb-item">{{ $option['active'] }}</div>
                 </div>
             </div>
 
@@ -17,93 +17,72 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h4>Basic DataTables</h4>
+                            <h4>{{ $option['active'] }}</h4>
                         </div>
 
                         <div class="card-body">
-                            <form action="{{ route('slider.store') }}" method="POST">
-                                @csrf
+                            @csrf
+                            <!-- Tombol Tambah Data -->
+                            <a href="/slider/tambah"class="btn btn-primary mb-4">
+                                <div>Tambah</div>
+                            </a>
 
-                                <!-- Tombol Tambah Data -->
-                                <a href="http://sekolah.test/slider/tambah"class="btn btn-primary mb-3">
-                                    <div>TAMBAH DATA</div>
-                                </a>
-
-                                <div class="card-body">
-                                    <div class="table-responsive">
-                                        <table class="table table-striped" id="table-1">
-                                            <thead>
-                                                <tr>
-                                                    <th class="text-center">
-                                                        #
-                                                    </th>
-                                                    <th>Judul</th>
-                                                    <th>Keterangan</th>
-                                                    <th>Gambar</th>
-                                                    <th>Aksi</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <?php
-                                                $no = 1;
-                                                ?>
-                                                @foreach ($data_slider as $a)
-                                                    <tr>
-                                                        <td>
-                                                            {{ $no++ }}
-                                                        </td>
-                                                        <td class="text-left">
-                                                            {{ $a['judul'] }}
-                                                        </td>
-                                                        <td>
-                                                            {{ $a['keterangan'] }}
-                                                        </td>
-                                                        </td>
-
-                                                        <td>
-                                                            <img src="{{ asset($a['gambar']) }}" alt="Gambar Slider"
+                            <div class="table-responsive">
+                                <table class="table table-striped" id="table-1">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">
+                                                #
+                                            </th>
+                                            <th>Gambar</th>
+                                            <th>Judul</th>
+                                            <th>Keterangan</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        $no = 1;
+                                        ?>
+                                        @if ($data_slider)
+                                            @foreach ($data_slider as $a)
+                                                <tr class="mt-4 mb-4">
+                                                    <td style="text-align: center;">
+                                                        {{ $no++ }}
+                                                    </td>
+                                                    <td>
+                                                        <a href="{{ asset($a['gambar']) }}" target="_blank">
+                                                            <img src="{{ asset($a['gambar']) }}" alt="Gambar Berita"
                                                                 width="100">
-                                                        </td>
+                                                        </a>
+                                                    </td>
+                                                    <td class="text-left">
+                                                        {{ $a['judul'] }}
+                                                    </td>
+                                                    <td>
+                                                        {{ $a['keterangan'] }}
+                                                    </td>
+                                                    </td>
 
-
-                                                        <td style="text-align: center;">
-                                                            <a href='slider/edit/{{ $a['id'] }}'
-                                                                class="btn btn-warning btn-sm">Edit</a>
-                                                            <button class="btn btn-danger" data-toggle="modal"
-                                                                data-target="#hapusmodal">Hapus</button>
-
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
+                                                    <td style="text-align: center;">
+                                                        <a href='slider/edit/{{ $a['id'] }}'
+                                                            class="btn btn-warning btn-sm mb-2" title="Edit"><i
+                                                                class="fas fa-pencil-alt"></i></a>
+                                                        <a href='slider/{{ $a['id'] }}/destroy'
+                                                            class="btn btn-danger btn-sm mb-2" data-confirm-delete="true"
+                                                            title="Hapus"><i class="fas fa-trash"></i></a>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        @endif
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
-
             </div>
         </section>
-        <div class="modal fade" tabindex="-1" role="dialog" id="hapusmodal">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Hapus</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Kamu Yakin Ingin Menghapusnya?!!</p>
-                    </div>
-                    <div class="modal-footer bg-whitesmoke br">
-                        <a href='slider/{{ $a['id'] }}' class="btn btn-danger btn-sm">Hapus</a>
-                    </div>
-                </div>
-            </div>
-        </div>
 
     </div>
 @endsection

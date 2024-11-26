@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use \App\Models\Menu;
 use Illuminate\Http\Request;
+use RealRashid\SweetAlert\Facades\Alert;
 
 
 
@@ -11,15 +12,31 @@ class MenuController extends Controller
 {
     public function index()
     {
-        $menu = Menu::latest()->get();
-        $title = 'DATA MENU';
-        return view('menu.menu', ['title'=>$title, 'data_menu'=>$menu]);
+        $title = 'Hapus Data!';
+        $text = "Apakah anda yakin ingin menghapus?";
+        confirmDelete($title, $text);
+
+        $menu = Menu::latest()
+        ->orderBy('id','desc')
+        ->get();
+
+        $option = [
+            'title' => 'Modul Menu',
+            'modul' => 'Menu',
+            'active' => 'Daftar Menu'
+        ];
+        return view('menu.menu', ['option'=>$option, 'data_menu'=>$menu]);
     }
  // Method untuk menampilkan form tambah data
  public function tambah()
  {
-     $title = 'Form Tambah Data';
-     return view('menu.tambah', ['title' => $title]);
+    $option = [
+        'title' => 'Modul Menu',
+        'modul' => 'Menu',
+        'active' => 'Tambah Menu'
+    ];
+
+     return view('menu.tambah', ['option' => $option]);
  }
 
  // Method untuk menyimpan data baru
@@ -30,26 +47,39 @@ class MenuController extends Controller
          'nama' => 'required',
          'parent' => 'required',
          'urut' => 'required',
-         'link' => 'required',
-         'aktif' => 'required',
-         'tipe' => 'required'
-     ]);
+         'link' => 'required'
+     ],
+     [
+        'nama.required' => 'Nama tidak boleh kosong',
+        'parent.required' => 'Parent  tidak boleh kosong',
+        'urut.required' => 'urut tidak boleh kosong',
+        'link.required' => 'link tidak boleh kosong',
+    ]
+    );
+    $data['aktif'] = isset($request->aktif) ? $request->aktif : 'N';
+        $data['tipe'] = isset($request->tipe) ? $request->tipe : '2';
 
     
 
      // Simpan data ke database menggunakan model
      Menu::create($data);
+     Alert::success('Sukses', 'Data berhasil ditambahkan');
 
      // Redirect kembali ke halaman index dengan pesan sukses
-     return redirect()->route('menu.index')->with('success', 'Data berhasil ditambahkan');
- }
+     return redirect()->route('menu.index');
+    }
 
  // Method untuk menampilkan form edit data
  public function edit($id)
  {
-     $title = 'Form Edit Data';
-     $data = menu::findOrFail($id); // Menggunakan findOrFail untuk kemudahan
-     return view('menu.edit', ['title' => $title, 'data' => $data]);
+    $data = Menu::findOrFail($id); // Menggunakan findOrFail untuk kemudahan
+   
+    $option = [
+        'title' => 'Modul Menu',
+        'modul' => 'Menu',
+        'active' => 'Edit Menu',
+    ];
+     return view('menu.edit', ['option' => $option,  'data' => $data]);
  }
 
  // Method untuk mengupdate data
@@ -61,33 +91,22 @@ class MenuController extends Controller
         'parent' => 'required',
         'urut' => 'required',
         'link' => 'required',
-        'aktif' => 'required',
-        'tipe' => 'required'
      ]);
 
-     // Temukan data berdasarkan ID dan update
-     $identitas = menu::findOrFail($id);
-     $identitas->update($data);
+     $data['aktif'] = isset($request->aktif) ? $request->aktif : 'N';
+        $data['tipe'] = isset($request->tipe) ? $request->tipe : '2';
 
-     // Redirect setelah update
-     return redirect()->route('menu.index')->with('success', 'Data berhasil diubah');
+        menu::where('id', $id)->update($data);
+        Alert::success('Sukses', 'Data berhasil diubah');
+        return redirect()->route('menu.index');
  }
 
  public function destroy($id)
  {
-     $data = menu::find($id);
- 
-     if (!$data) {
-         return redirect()->route('menu.index')->with(['error' => 'Data tidak ditemukan!']);
-     }
- 
-     // Contoh validasi tambahan sebelum menghapus
-     if ($data->status == 'protected') {
-         return redirect()->route('menu.index')->with(['error' => 'Data ini tidak bisa dihapus!']);
-     }
- 
+     $data = menu::findOrFail($id);
      $data->delete();
-     return redirect()->route('menu.index')->with(['success' => 'Data Berhasil Dihapus!']);
+     alert()->success('Hore!', 'Data berhasil dihapus');
+     return redirect()->route('menu.index');
  }
  
 }

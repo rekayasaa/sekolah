@@ -4,22 +4,38 @@ namespace App\Http\Controllers;
 
 use \App\Models\Slider;
 use Illuminate\Http\Request;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class SliderController extends Controller
 {
     // Method untuk menampilkan data
     public function index()
     {
-        $slider = Slider::latest()->get();
-        $title = 'DATA SLIDER';
-        return view('slider.slider', ['title' => $title, 'data_slider' => $slider]);
+        $title = 'Hapus Data!';
+        $text = "Apakah anda yakin ingin menghapus?";
+        confirmDelete($title, $text);
+
+        $slider = Slider::latest()
+        ->orderBy('id','desc')
+        ->get();
+
+       $option = [
+            'title' => 'Modul Slider',
+            'modul' => 'Slider',
+            'active' => 'Daftar Slider'
+        ];
+        return view('slider.slider', ['option' => $option, 'data_slider' => $slider]);
     }
 
     // Method untuk menampilkan form tambah data
     public function tambah()
     {
-        $title = 'Form Tambah Data';
-        return view('slider .tambah', ['title' => $title]);
+        $option = [
+            'title' => 'Modul Slider',
+            'modul' => 'Slider',
+            'active' => 'Daftar Slider'
+        ];
+        return view('slider.tambah', ['option' => $option]);
     }
 
     // Method untuk menyimpan data baru
@@ -31,7 +47,13 @@ class SliderController extends Controller
             'keterangan' => 'required',
             'gambar' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:5500'
             
-        ]);
+        ],
+        [
+            'judul.required' => 'judul tidak boleh kosong',
+            'keterangan.required' => 'keterangan  tidak boleh kosong',
+            'gambar.required' => 'gambar  tidak boleh kosong'
+        ]
+    );
 
         // Handle gambar upload
     if ($request->hasFile('gambar')) {
@@ -44,16 +66,22 @@ class SliderController extends Controller
     }
 
     Slider::create($data);
-
+    Alert::success('Sukses', 'Data berhasil ditambahkan');
     return redirect()->route('slider.index')->with('success', 'Data berhasil ditambahkan');
 }
 
     // Method untuk menampilkan form edit data
     public function edit($id)
     {
-        $title = 'Form Edit Data';
+        
         $data = Slider::findOrFail($id); // Menggunakan findOrFail untuk kemudahan
-        return view('slider.edit', ['title' => $title, 'data' => $data]);
+
+        $option = [
+            'title' => 'Modul Slider',
+            'modul' => 'Slider',
+            'active' => 'Daftar Slider'
+        ];
+        return view('slider.edit', ['option' => $option, 'data' => $data]);
     }
 
     // Method untuk mengupdate data
@@ -76,24 +104,16 @@ class SliderController extends Controller
 }
 
 Slider::where('id', $id)->update($data);
-
+Alert::success('Sukses', 'Data berhasil diubah');
 return redirect()->route('slider.index')->with('success', 'Data berhasil diubah');
 }
     public function destroy($id)
     {
-        $data = Slider::find($id);
-    
-        if (!$data) {
-            return redirect()->route('slider.index')->with(['error' => 'Data tidak ditemukan!']);
-        }
-    
-        // Contoh validasi tambahan sebelum menghapus
-        if ($data->status == 'protected') {
-            return redirect()->route('slider.index')->with(['error' => 'Data ini tidak bisa dihapus!']);
-        }
-    
+        $data = Slider::findOrFail($id);
         $data->delete();
-        return redirect()->route('slider.index')->with(['success' => 'Data Berhasil Dihapus!']);
+        alert()->success('Hore!', 'Data berhasil dihapus');
+        return redirect()->route('slider.index')->with('success', 'Data berhasil dihapus');
     }
+
     
 }

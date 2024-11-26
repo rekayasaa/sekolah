@@ -4,15 +4,28 @@ namespace App\Http\Controllers;
 
 use \App\Models\Identitas;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class IdentitasController extends Controller
 {
     // Method untuk menampilkan data
     public function index()
     {
-        $identitas = Identitas::latest()->get();
-        $title = 'DATA IDENTITAS';
-        return view('identitas.identitas', ['title' => $title, 'data_identitas' => $identitas]);
+        $title = 'Hapus Data!';
+        $text = "Apakah anda yakin ingin menghapus?";
+        confirmDelete($title, $text);
+
+        $identitas = Identitas::latest()
+        ->orderBy('id','desc')
+        ->get();
+
+        $option = [
+            'title' => 'Modul Identitas',
+            'modul' => 'Identitas',
+            'active' => 'Daftar Identitas'
+        ];
+        return view('identitas.identitas', ['option' => $option, 'data_identitas' => $identitas]);
     }
 
  
@@ -20,8 +33,13 @@ class IdentitasController extends Controller
     // Method untuk menampilkan form tambah data
     public function tambah()
     {
-        $title = 'Form Tambah Data';
-        return view('identitas.tambah', ['title' => $title]);
+        $option = [
+            'title' => 'Modul Identitas',
+            'modul' => 'Identitas',
+            'active' => 'Tambah Identitas'
+        ];
+
+        return view('identitas.tambah', ['option' => $option,]);
     }
 
     // Method untuk menyimpan data baru
@@ -43,17 +61,36 @@ class IdentitasController extends Controller
 
         // Simpan data ke database menggunakan model
         Identitas::create($data);
+        Alert::success('Sukses', 'Data berhasil ditambahkan');
+
 
         // Redirect kembali ke halaman index dengan pesan sukses
         return redirect()->route('identitas.index')->with('success', 'Data berhasil ditambahkan');
     }
 
+    public function show($nama)
+    {
+       
+        $data = Identitas::where('nama', $nama)->first(); // Menggunakan findOrFail untuk kemudahan
+
+        $option = [
+            'title' => 'Modul Identitas',
+            'modul' => 'Identitas',
+            'active' => 'Detail Identitas'
+        ];
+        return view('identitas.show', ['option' => $option,'data' => $data]);
+    }
+
     // Method untuk menampilkan form edit data  b
     public function edit($id)
     {
-        $title = 'Form Edit Data';
         $data = Identitas::findOrFail($id); // Menggunakan findOrFail untuk kemudahan
-        return view('identitas.edit', ['title' => $title, 'data' => $data]);
+        $option = [
+            'title' => 'Modul Identitas',
+            'modul' => 'Identitas',
+            'active' => 'Edit Identitas'
+        ];
+        return view('identitas.edit', ['option' => $option, 'data' => $data]);
     }
     
 
@@ -73,12 +110,11 @@ class IdentitasController extends Controller
             'email' => 'required|email'
         ]);
 
-        // Temukan data berdasarkan ID dan update
-        $identitas = Identitas::findOrFail($id);
-        $identitas->update($data);
+        
 
-        // Redirect setelah update
-        return redirect()->route('identitas.index')->with('success', 'Data berhasil diubah');
+        identitas::where('id', $id)->update($data);
+        Alert::success('Sukses', text: 'Data berhasil diubah');
+        return redirect()->route('identitas.index');
     }
 
     public function destroy($id)
@@ -98,12 +134,4 @@ class IdentitasController extends Controller
         return redirect()->route('identitas.index')->with(['success' => 'Data Berhasil Dihapus!']);
     }
 
-    public function detail()
-{
-    // Ambil semua data dari tabel identitas
-    $data_identitas = Identitas::all();
-
-    // Kirim ke view
-    return view('identitas.detail', compact('data_identitas'));
-}
 }

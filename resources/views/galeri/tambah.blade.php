@@ -2,50 +2,103 @@
 
 @section('content')
     <div class="main-content" style="min-height: 490px;">
-        <div class="card" id="settings-card">
-            <div class="card-header">
-                <h4>{{ $title }}</h4>
+        <section class="section">
+            <div class="section-header">
+                <h1>{{ $option['title'] }}</h1>
+                <div class="section-header-breadcrumb">
+                    <div class="breadcrumb-item active"><a href="#">Dashboard</a></div>
+                    <div class="breadcrumb-item"><a href="#">{{ $option['modul'] }}</a></div>
+                    <div class="breadcrumb-item">{{ $option['active'] }}</div>
+                </div>
             </div>
-            <div class="card-body">
-                <p class="text-muted">Halaman Tambah Data</p>
 
-                <form method="POST" action="{{ route('galeri.store') }}" enctype="multipart/form-data">
-                    @csrf
-                    <div class="form-group row align-items-right">
-                        <label for="album_id" class="form-control-label col-sm-2 text-md-right">Album Id</label>
-                        <div class="col-sm-6 col-md-9">
-                            <input type="number" name="album_id" class="form-control" id="album_id" required>
+            <div class="row">
+                <div class="col-12">
+                    <div class="card" id="settings-card">
+                        <div class="card-header">
+                            <h4>{{ $option['active'] }}</h4>
+                        </div>
+                        <div class="card-body">
+                            <form method="POST" action="{{ route('galeri.store') }}" enctype="multipart/form-data">
+                                @csrf
+                                <div class="form-group row align-items-right">
+                                    <label for="judul" class="form-control-label col-sm-2 text-md-right">Judul</label>
+                                    <div class="col-sm-6 col-md-9">
+                                        <input type="text" name="judul" value="{{ old('judul') }}"
+                                            class="form-control @error('judul') is-invalid @enderror" id="judul">
+
+                                        @error('judul')
+                                            <div class="invalid-feedback" style="display:inline">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="form-group row align-items-right">
+                                    <label for="keterangan"
+                                        class="form-control-label col-sm-2 text-md-right">Keterangan</label>
+                                    <div class="col-sm-6 col-md-9">
+                                        <textarea class="summernote @error('keterangan') is-invalid @enderror" name="keterangan" style="display: none;"
+                                            id="keterangan">
+                        {{ old('keterangan') }}
+                        </textarea>
+                                        @error('keterangan')
+                                            <div class="invalid-feedback" style="display:inline">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="form-group row align-items-right">
+                                    <label for="album_id" class="form-control-label col-sm-2 text-md-right">Album</label>
+                                    <div class="col-sm-6 col-md-9">
+                                        <select class="form-control @error('album_id') is-invalid @enderror" name="album_id"
+                                            id="album_id">
+                                            <option value="">-- Pilih Album --</option>
+
+                                            @foreach ($album as $al)
+                                                <option value="{{ $al['id'] }}" @selected(old('album_id') == $al['id'])>
+                                                    {{ $al['judul'] }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+
+                                        @error('album_id')
+                                            <div class="invalid-feedback" style="display:inline">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="form-group row align-items-right">
+                                    <label for="gambar" class="form-control-label col-sm-2 text-md-right">Gambar</label>
+                                    <div class="col-sm-6 col-md-9">
+                                        <div class="custom-file">
+                                            <input type="file" name="gambar" class="custom-file-input" id="gambar">
+                                            <label class="custom-file-label" for="customFile">Choose file</label>
+                                        </div>
+                                        @error('gambar')
+                                            <div class="invalid-feedback" style="display:inline">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="form-group row align-items-right">
+                                    <label class="form-control-label col-sm-2 text-md-right"></label>
+                                    <div class="col-sm-12 col-md-7 mt-3">
+                                        <button type="submit"
+                                            class="btn btn-primary waves-effect waves-light">Simpan</button>
+                                        <a href="/galeri" class="btn btn-danger waves-effect waves-light">Kembali</a>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
-                    <div class="form-group row align-items-right">
-                        <label for="judul" class="form-control-label col-sm-2 text-md-right">Judul</label>
-                        <div class="col-sm-6 col-md-9">
-                            <input type="text" name="judul" class="form-control" id="judul" required>
-                        </div>
-                    </div>
-                    <div class="form-group row align-items-right">
-                        <label for="slug" class="form-control-label col-sm-2 text-md-right">Slug</label>
-                        <div class="col-sm-6 col-md-9">
-                            <input type="text" name="slug" class="form-control" id="slug" required>
-                        </div>
-                    </div>
-                    <div class="form-group row align-items-right">
-                        <label for="gambar" class="form-control-label col-sm-2 text-md-right">Gambar</label>
-                        <div class="col-sm-6 col-md-9">
-                            <input type="file" name="gambar" class="form-control" id="gambar" required>
-                        </div>
-                    </div>
-                    <div class="form-group row align-items-right">
-                        <label for="keterangan" class="form-control-label col-sm-2 text-md-right">Keterangan</label>
-                        <div class="col-sm-6 col-md-9">
-                            <input type="text" name="keterangan" class="form-control" id="keterangan" required>
-                        </div>
-                    </div>
-                    <div class="card-footer bg-white text-md-left">
-                        <button type="submit" class="btn btn-primary waves-effect waves-light">Simpan</button>
-                    </div>
-                </form>
+                </div>
             </div>
-        </div>
+        </section>
     </div>
 @endsection
+
+@include('galeri.library')
